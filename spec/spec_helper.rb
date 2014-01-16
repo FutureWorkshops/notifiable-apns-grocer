@@ -4,7 +4,6 @@ require 'simplecov'
 SimpleCov.start do
   minimum_coverage 80
   add_filter "/spec/"
-  add_filter "/db/"
 end
 
 require 'active_record'
@@ -13,6 +12,8 @@ require 'notifiable'
 require 'grocer'
 require File.expand_path("../../lib/notifiable/apns/grocer",  __FILE__)
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+
+db_path = 'spec/support/db/test.sqlite3'
 
 RSpec.configure do |config|  
   config.mock_with :rspec
@@ -23,13 +24,13 @@ RSpec.configure do |config|
     # DB setup
     ActiveRecord::Base.establish_connection(
      { :adapter => 'sqlite3',
-       :database => 'db/test.sqlite3',
+       :database => db_path,
        :pool => 5,
        :timeout => 5000}
     )
     
     ActiveRecord::Migration.verbose = false
-    ActiveRecord::Migrator.migrate "db/migrate"
+    ActiveRecord::Migrator.migrate "spec/support/db/migrate"
     
     @grocer = Grocer.server(port: 2195)
     @grocer.accept
@@ -45,6 +46,6 @@ RSpec.configure do |config|
     @grocer.close
     
     # drop the database
-    File.delete('db/test.sqlite3')
+    File.delete(db_path)
   }
 end
