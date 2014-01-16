@@ -5,11 +5,8 @@ require "notifiable/apns/grocer/stream"
 module Notifiable
   module Apns
     module Grocer
-      
-      def initialize
-        Notifiable.notifier_classes[:apns] = Notifiable::Apns::Grocer::Stream
-      end
-      
     end
   end
 end
+
+Notifiable.notifier_classes[:apns] = Notifiable::Apns::Grocer::Stream
