@@ -1,8 +1,10 @@
+ENV['RAILS_ENV'] ||= 'test'
+
 require 'simplecov'
 SimpleCov.start do
   minimum_coverage 80
   add_filter "/spec/"
-  add_filter "/config/"
+  add_filter "/db/"
 end
 
 require 'active_record'
@@ -26,11 +28,13 @@ RSpec.configure do |config|
        :timeout => 5000}
     )
     
-    ActiveRecord::Migration.verbose = true
-    ActiveRecord::Migrator.migrate "/Users/matt/Documents/notifiable-rails/lib/generators/notifiable/install/templates"
+    ActiveRecord::Migration.verbose = false
+    ActiveRecord::Migrator.migrate "db/migrate"
     
     @grocer = Grocer.server(port: 2195)
     @grocer.accept
+    
+    Notifiable.apns_gateway = "localhost"
   }
   
   config.before(:each) {
