@@ -6,6 +6,7 @@ SimpleCov.start do
   add_filter "/spec/"
 end
 
+require 'database_cleaner'
 require 'active_record'
 require 'rails'
 require 'notifiable'
@@ -14,6 +15,7 @@ require File.expand_path("../../lib/notifiable/apns/grocer",  __FILE__)
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 db_path = 'spec/support/db/test.sqlite3'
+DatabaseCleaner.strategy = :truncation
 
 RSpec.configure do |config|  
   config.mock_with :rspec
@@ -39,7 +41,12 @@ RSpec.configure do |config|
   }
   
   config.before(:each) {
+    DatabaseCleaner.start
     @grocer.notifications.clear
+  }
+  
+  config.after(:each) {
+    DatabaseCleaner.clean
   }
   
   config.after(:all) {

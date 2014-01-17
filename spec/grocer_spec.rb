@@ -2,12 +2,13 @@ require 'spec_helper'
 
 describe Notifiable::Apns::Grocer::Stream do
   
+  let(:g) { Notifiable::Apns::Grocer::Stream.new }
+  let(:n) { Notifiable::Notification.create(:message => "Test message") }
+  let(:d) { Notifiable::DeviceToken.create(:token => "ABC123", :provider => :apns) }
+  let(:u) { User.new(d) }
+  
   it "sends a single grocer notification" do    
-            
-    g = Notifiable::Apns::Grocer::Stream.new
-    n = Notifiable::Notification.create(:message => "Test message")
-    d = Notifiable::DeviceToken.create(:token => "ABC123")
-    
+          
     g.send_notification(n, d)
     
     Timeout.timeout(2) {
@@ -17,11 +18,6 @@ describe Notifiable::Apns::Grocer::Stream do
   end
   
   it "sends a single grocer notification in a batch" do    
-            
-    g = Notifiable::Apns::Grocer::Stream.new
-    n = Notifiable::Notification.create(:message => "Test message")
-    d = Notifiable::DeviceToken.create(:token => "ABC123", :provider => :apns)
-    u = User.new(d)
     
     Notifiable.batch do |b|
       b.add(n, u)
