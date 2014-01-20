@@ -1,4 +1,5 @@
 require 'notifiable'
+require 'grocer'
 
 module Notifiable
   module Apns
