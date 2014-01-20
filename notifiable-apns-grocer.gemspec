@@ -6,11 +6,11 @@ require 'notifiable/apns/grocer/version'
 Gem::Specification.new do |spec|
   spec.name          = "notifiable-apns-grocer"
   spec.version       = Notifiable::Apns::Grocer::VERSION
-  spec.authors       = ["Matt Brooke-Smith"]
-  spec.email         = ["matt@futureworkshops.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.authors       = ["Kamil Kocemba", "Matt Brooke-Smith"]
+  spec.email         = ["kamil@futureworkshops.com", "matt@futureworkshops.com"]
+  spec.homepage      = "http://www.futureworkshops.com"
+  spec.description   = "Plugin to use Grocer for APNS with Notifiable-Rails"
+  spec.summary       = "Plugin to use Grocer for APNS with Notifiable-Rails"
   spec.license       = "Apache 2.0"
 
   spec.files         = `git ls-files`.split($/)
