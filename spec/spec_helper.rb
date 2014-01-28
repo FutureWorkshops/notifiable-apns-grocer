@@ -1,11 +1,13 @@
 ENV['RAILS_ENV'] ||= 'test'
 
 require 'simplecov'
+require 'simplecov-rcov'
+SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 SimpleCov.start do
-  minimum_coverage 80
   add_filter "/spec/"
 end
 
+require 'timeout'
 require 'database_cleaner'
 require 'active_record'
 require 'rails'
