@@ -8,6 +8,7 @@ SimpleCov.start do
   add_filter "/spec/"
 end
 
+require 'timeout'
 require 'database_cleaner'
 require 'active_record'
 require 'rails'
