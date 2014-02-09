@@ -8,7 +8,7 @@ describe Notifiable::Apns::Grocer::Stream do
   let(:u) { User.new(d) }
   
   it "sends a single grocer notification" do    
-          
+    g.env = "test"      
     g.send_notification(n, d)
     
     Timeout.timeout(2) {
