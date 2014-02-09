@@ -8,7 +8,7 @@ describe Notifiable::Apns::Grocer::Stream do
   let(:u) { User.new(d) }
   
   it "sends a single grocer notification" do    
-          
+    g.env = "test"      
     g.send_notification(n, d)
     
     Timeout.timeout(2) {
@@ -29,6 +29,20 @@ describe Notifiable::Apns::Grocer::Stream do
       notification.alert.should eql "Test message"
     }
   end 
+  
+  it "supports custom properties" do
+    n.payload = {:apns => {:custom => {:flag => true}}}
+    
+    Notifiable.batch do |b|
+      b.add(n, u)
+    end
+    Notifiable::NotificationDeviceToken.count.should == 1
+    
+    Timeout.timeout(2) {
+      notification = @grocer.notifications.pop
+      notification.custom[:flag].should == true
+    }
+  end
   
 end
 
