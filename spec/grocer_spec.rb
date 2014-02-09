@@ -31,7 +31,7 @@ describe Notifiable::Apns::Grocer::Stream do
   end 
   
   it "supports custom properties" do
-    n.payload = {:flag => true}
+    n.payload = {:apns => {:custom => {:flag => true}}}
     
     Notifiable.batch do |b|
       b.add(n, u)
