@@ -30,6 +30,20 @@ describe Notifiable::Apns::Grocer::Stream do
     }
   end 
   
+  it "supports custom properties" do
+    n.payload = {:flag => true}
+    
+    Notifiable.batch do |b|
+      b.add(n, u)
+    end
+    Notifiable::NotificationDeviceToken.count.should == 1
+    
+    Timeout.timeout(2) {
+      notification = @grocer.notifications.pop
+      notification.custom[:flag].should == true
+    }
+  end
+  
 end
 
 User = Struct.new(:device_token) do
