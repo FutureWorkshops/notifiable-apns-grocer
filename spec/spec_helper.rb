@@ -38,8 +38,6 @@ RSpec.configure do |config|
     
     @grocer = Grocer.server(port: 2195)
     @grocer.accept
-    
-    Notifiable.apns_gateway = "localhost"
   }
   
   config.before(:each) {
