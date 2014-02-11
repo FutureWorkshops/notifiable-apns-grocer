@@ -17,7 +17,7 @@ describe Notifiable::Apns::Grocer::Stream do
     }
   end
   
-  it "sends a single grocer notification in a batch" do    
+  it "sends a single grocer notification in a batch" do
     
     Notifiable.batch do |b|
       b.add(n, u)
@@ -31,7 +31,7 @@ describe Notifiable::Apns::Grocer::Stream do
   end 
   
   it "supports custom properties" do
-    n.payload = {:apns => {:custom => {:flag => true}}}
+    n.params = {:flag => true}
     
     Notifiable.batch do |b|
       b.add(n, u)

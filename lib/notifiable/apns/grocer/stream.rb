@@ -19,8 +19,8 @@ module Notifiable
           
           grocer_notification = ::Grocer::Notification.new(
             device_token: device_token.token, 
-            alert: notification.provider_value(device_token.provider.to_sym, :message), 
-            custom: notification.provider_value(device_token.provider.to_sym, :custom) 
+            alert: notification.message, 
+            custom: notification.params
           )
             
   				grocer_pusher.push(grocer_notification) unless Notifiable.delivery_method == :test
