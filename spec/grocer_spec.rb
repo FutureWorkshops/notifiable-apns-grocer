@@ -22,7 +22,8 @@ describe Notifiable::Apns::Grocer::Stream do
     Notifiable.batch do |b|
       b.add(n, u)
     end
-    Notifiable::NotificationDeviceToken.count.should == 1
+    Notifiable::NotificationStatus.count.should == 1
+    Notifiable::NotificationStatus.first.status.should == 0
     
     Timeout.timeout(2) {
       notification = @grocer.notifications.pop
@@ -36,7 +37,8 @@ describe Notifiable::Apns::Grocer::Stream do
     Notifiable.batch do |b|
       b.add(n, u)
     end
-    Notifiable::NotificationDeviceToken.count.should == 1
+    Notifiable::NotificationStatus.count.should == 1
+    Notifiable::NotificationStatus.first.status.should == 0
     
     Timeout.timeout(2) {
       notification = @grocer.notifications.pop
