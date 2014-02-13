@@ -25,7 +25,7 @@ module Notifiable
             
   				grocer_pusher.push(grocer_notification) unless Notifiable.delivery_method == :test
 
-          processed(notification, device_token)
+          processed(notification, device_token, 0)
   			end
       
         def flush
