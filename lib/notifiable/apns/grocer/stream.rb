@@ -15,12 +15,12 @@ module Notifiable
         end
       
   			protected      
-  			def enqueue(notification, device_token)        				
+  			def enqueue(notification, device_token, params)        				
           
           grocer_notification = ::Grocer::Notification.new(
             device_token: device_token.token, 
             alert: notification.message, 
-            custom: notification.params
+            custom: params
           )
             
   				grocer_pusher.push(grocer_notification) unless Notifiable.delivery_method == :test
