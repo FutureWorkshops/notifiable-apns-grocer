@@ -15,11 +15,11 @@ module Notifiable
         end
       
   			protected      
-  			def enqueue(notification, device_token, params)        				
+  			def enqueue(notification, device_token, message, params)        				
           
           grocer_notification = ::Grocer::Notification.new(
             device_token: device_token.token, 
-            alert: notification.message, 
+            alert: message, 
             custom: params
           )
             
