@@ -15,12 +15,12 @@ module Notifiable
         end
       
   			protected      
-  			def enqueue(notification, device_token, message, params)        				
+  			def enqueue(device_token)        				
           
           grocer_notification = ::Grocer::Notification.new(
             device_token: device_token.token, 
-            alert: message, 
-            custom: params
+            alert: notification.message, 
+            custom: notification.send_params
           )
             
   				grocer_pusher.push(grocer_notification) unless Notifiable.delivery_method == :test
@@ -37,7 +37,7 @@ module Notifiable
           #8   - Invalid token
           #255 - None (unknown)
 
-          processed(notification, device_token, 0)
+          processed(device_token, 0)
   			end
       
         def flush
