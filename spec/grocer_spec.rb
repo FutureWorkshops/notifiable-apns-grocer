@@ -8,7 +8,9 @@ describe Notifiable::Apns::Grocer::Stream do
   let(:d) { Notifiable::DeviceToken.create(:token => "ABC123", :provider => :apns, :app => a) }
   
   it "sends a single notification" do
-    n1.batch do {|n| n.add_device_token(d)}
+    n1.batch do |n| 
+      n.add_device_token(d)
+    end
     
     Notifiable::NotificationStatus.count.should == 1
     Notifiable::NotificationStatus.first.status.should == 0
@@ -21,7 +23,9 @@ describe Notifiable::Apns::Grocer::Stream do
   end 
   
   it "supports custom properties" do    
-    n1_with_params.batch do {|n| n.add_device_token(d)}
+    n1_with_params.batch do |n| 
+      n.add_device_token(d)
+    end
 
     Notifiable::NotificationStatus.count.should == 1
     Notifiable::NotificationStatus.first.status.should == 0
