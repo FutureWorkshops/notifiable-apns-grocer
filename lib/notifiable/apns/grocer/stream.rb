@@ -75,8 +75,12 @@ module Notifiable
       
           def process_feedback
     				grocer_feedback.each do |attempt|
-    					device_token = DeviceToken.find_by_token(attempt.device_token)
-    					device_token.destroy if device_token
+    					token = attempt.device_token
+    					device_token = DeviceToken.find_by_token(token)
+    					if device_token
+    						device_token.update_attribute("is_valid", false) if device_token.updated_at < attempt.timestamp
+    						Rails.logger.info("Device #{token} (#{device_token.user_id}) failed at #{attempt.timestamp}")
+    					end
     				end
           end
   		end
