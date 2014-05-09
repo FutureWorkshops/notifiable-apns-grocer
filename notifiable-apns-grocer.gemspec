@@ -18,8 +18,8 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "notifiable-rails", ">=0.18.0"
-  spec.add_dependency "grocer"
+  spec.add_dependency "notifiable-rails", ">=0.19.0"
+  spec.add_dependency "grocer", '~> 0.5.0'
  
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
