@@ -44,11 +44,11 @@ module Notifiable
           process_feedback unless self.test_env?
         end
 
-        private
-          def sandbox?
-            self.sandbox.eql? "1"
-          end
-        
+        def sandbox?
+          self.sandbox.eql? "1"
+        end
+
+        private        
           def gateway_config 
             {
               certificate: self.certificate,
