@@ -37,4 +37,14 @@ describe Notifiable::Apns::Grocer::Stream do
     }
   end
   
+  it "works using production gateway" do
+    
+    g = Notifiable::Apns::Grocer::Stream.new(Rails.env, n1)
+    a.configuration = {:apns => {:sandbox => "0"}} # This is how production is configured
+    a.configure(:apns, g)
+    
+    expect(g.send(:sandbox?)).to be_false
+    
+  end
+  
 end
