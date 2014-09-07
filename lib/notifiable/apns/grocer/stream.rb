@@ -1,13 +1,14 @@
 require 'notifiable'
 require 'grocer'
+require 'connection_pool'
 
 module Notifiable
   module Apns
     module Grocer
   		class Stream < Notifiable::NotifierBase
         
-        attr_accessor :sandbox, :certificate, :passphrase
-        
+        attr_accessor :sandbox, :certificate, :passphrase, :connection_pool_size, :connection_pool_timeout
+                
         def close
           super
           @grocer_pusher = nil        
@@ -15,40 +16,45 @@ module Notifiable
         end
       
   			protected      
-  			def enqueue(device_token)        				
+    			def enqueue(device_token)        				
           
-          grocer_notification = ::Grocer::Notification.new(
-            device_token: device_token.token, 
-            alert: notification.message, 
-            custom: notification.send_params
-          )
-            
-  				grocer_pusher.push(grocer_notification) unless Notifiable.delivery_method == :test
+            grocer_notification = ::Grocer::Notification.new(
+              device_token: device_token.token, 
+              alert: notification.message, 
+              custom: notification.send_params
+            )
           
-          # TODO - add errors via enhanced interface
-          #0   - No errors encountered
-          #1   - Processing error
-          #2   - Missing device token
-          #3   - Missing topic
-          #4   - Missing payload
-          #5   - Invalid token size
-          #6   - Invalid topic size
-          #7   - Invalid payload size
-          #8   - Invalid token
-          #255 - None (unknown)
-
-          processed(device_token, 0)
-  			end
+            pusher_pool.with do |pusher|
+              pusher.push(grocer_notification) unless Notifiable.delivery_method == :test
+            end
+                      
+            # assume processed. Errors will be receieved through a callback
+            processed(device_token, 0)
+    			end
       
-        def flush
-          process_feedback unless self.test_env?
-        end
+          def flush
+            process_feedback unless self.test_env?
+          end
 
-        def sandbox?
-          self.sandbox.eql? "1"
-        end
-
-        private        
+        private
+        # override getters with defaults
+          def sandbox
+            @sandbox || "0"
+          end
+          
+          def connection_pool_size
+            @connection_pool_size || 10
+          end
+          
+          def connection_pool_timeout
+            @connection_pool_timeout || 10
+          end
+         
+          def sandbox?
+            sandbox.eql? "1"
+          end
+        
+        # logic     
           def gateway_config 
             {
               certificate: self.certificate,
@@ -68,9 +74,11 @@ module Notifiable
               retries:     3
             }
           end
-        
-          def grocer_pusher
-            @grocer_pusher ||= ::Grocer.pusher(gateway_config)
+          
+          def pusher_pool
+            @pusher_pool ||= ConnectionPool.new(size: connection_pool_size, timeout: connection_pool_timeout) do
+              ::Grocer.pusher(gateway_config)
+            end
           end
       
           def grocer_feedback
