@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "notifiable-rails", ">=0.19.0"
   spec.add_dependency "grocer", '~> 0.5.0'
+  spec.add_dependency "connection_pool", '~> 2.0.0'
  
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
