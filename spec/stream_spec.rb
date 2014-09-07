@@ -42,7 +42,8 @@ describe Notifiable::Apns::Grocer::Stream do
     a.configuration = {:apns => {:sandbox => "0"}} # This is how production is configured
     a.configure(:apns, g)
     
-    expect(g.send(:sandbox?)).to be_falsey
+    expect(g.send(:sandbox?)).to eq false
+    
   end
 
   it "has default connection pool size" do
