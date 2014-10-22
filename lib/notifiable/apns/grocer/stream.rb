@@ -59,7 +59,7 @@ module Notifiable
             {
               certificate: self.certificate,
               passphrase:  self.passphrase,
-              gateway:     self.test_env? ? "localhost" : self.sandbox? ? "gateway.sandbox.push.apple.com" : "gateway.push.apple.com",
+              gateway:     self.test_env? ? "localhost" : sandbox? ? "gateway.sandbox.push.apple.com" : "gateway.push.apple.com",
               port:        2195,
               retries:     3
             }
