@@ -16,12 +16,12 @@ module Notifiable
         end
       
   			protected      
-    			def enqueue(device_token)        				
+    			def enqueue(device_token, localized_notification)        				
           
             grocer_notification = ::Grocer::Notification.new(
               device_token: device_token.token, 
-              alert: notification.message, 
-              custom: notification.send_params
+              alert: localized_notification.message, 
+              custom: localized_notification.send_params
             )
           
             pusher_pool.with do |pusher|
