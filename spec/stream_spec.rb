@@ -3,11 +3,12 @@ require 'spec_helper'
 describe Notifiable::Apns::Grocer::Stream do
 
   let(:a) { Notifiable::App.create }  
-  let(:n1) { Notifiable::Notification.create(:message => "Test message", :app => a) }
-  let(:n1_with_params) { Notifiable::Notification.create(:message => "Test message", :app => a, :params => {:flag => true}) }
-  let(:d) { Notifiable::DeviceToken.create(:token => "ABC123", :provider => :apns, :app => a) }
+  let(:n1) { Notifiable::Notification.create(:app => a) }
+  let!(:ln) { Notifiable::LocalizedNotification.create(:message => "Test message", :params => {:flag => true}, :notification => n1, :locale => :en) }
+  let(:d) { Notifiable::DeviceToken.create(:token => "ABC123", :provider => :apns, :app => a, :locale => :en) }
   
   it "sends a single notification" do
+    
     n1.batch do |n| 
       n.add_device_token(d)
     end
@@ -18,12 +19,12 @@ describe Notifiable::Apns::Grocer::Stream do
     Timeout.timeout(2) {
       notification = @grocer.notifications.pop
       notification.alert.should eql "Test message"
-      notification.custom[:notification_id].should == n1.id
+      notification.custom[:localized_notification_id].should == ln.id
     }
   end 
   
   it "supports custom properties" do    
-    n1_with_params.batch do |n| 
+    n1.batch do |n| 
       n.add_device_token(d)
     end
 
@@ -32,7 +33,7 @@ describe Notifiable::Apns::Grocer::Stream do
     
     Timeout.timeout(2) {
       notification = @grocer.notifications.pop
-      notification.custom[:notification_id].should == n1_with_params.id
+      notification.custom[:localized_notification_id].should == ln.id
       notification.custom[:flag].should == true
     }
   end
