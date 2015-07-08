@@ -24,9 +24,7 @@ module Notifiable
               custom: localized_notification.send_params
             )
           
-            pusher_pool.with do |pusher|
-              pusher.push(grocer_notification) unless Notifiable.delivery_method == :test
-            end
+            pusher.push(grocer_notification) unless Notifiable.delivery_method == :test
                       
             # assume processed. Errors will be receieved through a callback
             processed(device_token, 0)
@@ -79,6 +77,10 @@ module Notifiable
             @pusher_pool ||= ConnectionPool.new(size: connection_pool_size, timeout: connection_pool_timeout) do
               ::Grocer.pusher(gateway_config)
             end
+          end
+          
+          def pusher
+            @pusher ||= ::Grocer.pusher(gateway_config)
           end
       
           def grocer_feedback
