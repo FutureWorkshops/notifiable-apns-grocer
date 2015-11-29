@@ -7,12 +7,28 @@ module Notifiable
     module Grocer
   		class Stream < Notifiable::NotifierBase
         
-        attr_accessor :sandbox, :certificate, :passphrase, :connection_pool_size, :connection_pool_timeout
+        attr_accessor :certificate, :passphrase, :connection_pool_size, :connection_pool_timeout, :gateway_host, :gateway_port, :feedback_host, :feedback_port
                 
         def close
           super
           @grocer_pusher = nil        
           @grocer_feedback = nil
+        end
+        
+        def gateway_host
+          @gateway_host || "gateway.push.apple.com"
+        end
+        
+        def gateway_port
+          @gateway_port || 2195
+        end
+        
+        def feedback_host
+          @gateway_host || "feedback.push.apple.com"
+        end
+        
+        def feedback_port
+          @feedback_port || 2196
         end
       
   			protected      
@@ -25,7 +41,7 @@ module Notifiable
             )
           
             pusher_pool.with do |pusher|
-              pusher.push(grocer_notification) unless Notifiable.delivery_method == :test
+              pusher.push(grocer_notification)
             end
                       
             # assume processed. Errors will be receieved through a callback
@@ -59,8 +75,8 @@ module Notifiable
             {
               certificate: self.certificate,
               passphrase:  self.passphrase,
-              gateway:     self.test_env? ? "localhost" : sandbox? ? "gateway.sandbox.push.apple.com" : "gateway.push.apple.com",
-              port:        2195,
+              gateway:     self.gateway_host,
+              port:        self.gateway_port,
               retries:     3
             }
           end
@@ -69,8 +85,8 @@ module Notifiable
             {
               certificate: self.certificate,
               passphrase:  self.passphrase,
-              gateway:     self.test_env? ? "feedback.sandbox.push.apple.com" : "feedback.push.apple.com",
-              port:        2196,
+              gateway:     self.feedback_host,
+              port:        self.feedback_port,
               retries:     3
             }
           end
