@@ -12,7 +12,8 @@ describe Notifiable::Apns::Grocer::Stream do
           :gateway_host => "localhost", 
           :gateway_port => 2195, 
           :feedback_host => "localhost", 
-          :feedback_port => 2196}}
+          :feedback_port => 2196,
+          :certificate => File.join(File.dirname(__FILE__), "fixtures", "apns-development.pem")}}
   end
   
   it "sends a single notification" do
