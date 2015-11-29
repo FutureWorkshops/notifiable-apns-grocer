@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "notifiable-rails", ">=0.19.0"
+  spec.add_dependency "notifiable-rails", ">=0.21.0"
   spec.add_dependency "grocer", '~> 0.5.0'
   spec.add_dependency "connection_pool", '~> 2.0.0'
  
@@ -30,5 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "sqlite3"
   spec.add_development_dependency "database_cleaner"
   spec.add_development_dependency 'ruby-prof'
+  spec.add_development_dependency 'byebug'
   
 end
