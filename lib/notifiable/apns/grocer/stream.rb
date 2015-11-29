@@ -8,31 +8,41 @@ module Notifiable
   		class Stream < Notifiable::NotifierBase
         
         attr_accessor :certificate, :passphrase, :connection_pool_size, :connection_pool_timeout, :gateway_host, :gateway_port, :feedback_host, :feedback_port
+           
+        def gateway_host
+          @gateway_host || "gateway.push.apple.com"
+        end
+      
+        def gateway_port
+          @gateway_port || 2195
+        end
+      
+        def feedback_host
+          @gateway_host || "feedback.push.apple.com"
+        end
+      
+        def feedback_port
+          @feedback_port || 2196
+        end
+        
+        def connection_pool_size
+          @connection_pool_size || 10
+        end
+        
+        def connection_pool_timeout
+          @connection_pool_timeout || 10
+        end   
                 
         def close
           super
           @grocer_pusher = nil        
           @grocer_feedback = nil
         end
-        
-        def gateway_host
-          @gateway_host || "gateway.push.apple.com"
-        end
-        
-        def gateway_port
-          @gateway_port || 2195
-        end
-        
-        def feedback_host
-          @gateway_host || "feedback.push.apple.com"
-        end
-        
-        def feedback_port
-          @feedback_port || 2196
-        end
       
   			protected      
     			def enqueue(device_token, localized_notification)        				
+          
+            raise "Certificate missing" if certificate.nil?
           
             grocer_notification = ::Grocer::Notification.new(
               device_token: device_token.token, 
@@ -52,38 +62,21 @@ module Notifiable
             process_feedback unless self.test_env?
           end
 
-        private
-        # override getters with defaults
-          def sandbox
-            @sandbox || "0"
-          end
-          
-          def connection_pool_size
-            @connection_pool_size || 10
-          end
-          
-          def connection_pool_timeout
-            @connection_pool_timeout || 10
-          end
-         
-          def sandbox?
-            sandbox.eql? "1"
-          end
-        
+        private                 
         # logic     
           def gateway_config 
             {
-              certificate: self.certificate,
-              passphrase:  self.passphrase,
-              gateway:     self.gateway_host,
-              port:        self.gateway_port,
+              certificate: certificate,
+              passphrase:  passphrase,
+              gateway:     gateway_host,
+              port:        gateway_port,
               retries:     3
             }
           end
           
           def feedback_config
             {
-              certificate: self.certificate,
+              certificate: certificate,
               passphrase:  self.passphrase,
               gateway:     self.feedback_host,
               port:        self.feedback_port,
