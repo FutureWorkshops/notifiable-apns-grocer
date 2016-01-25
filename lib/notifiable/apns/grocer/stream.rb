@@ -45,9 +45,10 @@ module Notifiable
             raise "Certificate missing" if certificate.nil?
           
             grocer_notification = ::Grocer::Notification.new(
-              device_token: device_token.token, 
+              device_token: device_token.token,
               alert: localized_notification.message, 
-              custom: localized_notification.send_params
+              custom: localized_notification.send_params,
+              sound: "default"
             )
           
             pusher_pool.with do |pusher|
