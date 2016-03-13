@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Kamil Kocemba", "Matt Brooke-Smith"]
   spec.email         = ["kamil@futureworkshops.com", "matt@futureworkshops.com"]
   spec.homepage      = "http://www.futureworkshops.com"
-  spec.description   = "Plugin to use Grocer for APNS with Notifiable-Rails"
-  spec.summary       = "Plugin to use Grocer for APNS with Notifiable-Rails"
+  spec.description   = "Notifiable APNS plugin for Grocer"
+  spec.summary       = "Notifiable APNS plugin for Grocer"
   spec.license       = "Apache 2.0"
 
   spec.files         = `git ls-files`.split($/)
