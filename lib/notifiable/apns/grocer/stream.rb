@@ -8,6 +8,8 @@ module Notifiable
   		class Stream < Notifiable::NotifierBase
         
         notifier_attribute :certificate, :passphrase, :connection_pool_size, :connection_pool_timeout, :gateway_host, :gateway_port, :feedback_host, :feedback_port
+        
+        attr_reader :certificate, :passphrase
            
         def gateway_host
           @gateway_host || "gateway.push.apple.com"
@@ -31,7 +33,7 @@ module Notifiable
         
         def connection_pool_timeout
           @connection_pool_timeout || 10
-        end   
+        end
                 
         def close
           super
@@ -78,9 +80,9 @@ module Notifiable
           def feedback_config
             {
               certificate: certificate,
-              passphrase:  self.passphrase,
-              gateway:     self.feedback_host,
-              port:        self.feedback_port,
+              passphrase:  passphrase,
+              gateway:     feedback_host,
+              port:        feedback_port,
               retries:     3
             }
           end
