@@ -7,7 +7,7 @@ module Notifiable
     module Grocer
   		class Stream < Notifiable::NotifierBase
         
-        attr_accessor :certificate, :passphrase, :connection_pool_size, :connection_pool_timeout, :gateway_host, :gateway_port, :feedback_host, :feedback_port
+        notifier_attribute :certificate, :passphrase, :connection_pool_size, :connection_pool_timeout, :gateway_host, :gateway_port, :feedback_host, :feedback_port
            
         def gateway_host
           @gateway_host || "gateway.push.apple.com"
