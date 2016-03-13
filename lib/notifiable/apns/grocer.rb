@@ -8,5 +8,3 @@ module Notifiable
     end
   end
 end
-
-Notifiable.notifier_classes[:apns] = Notifiable::Apns::Grocer::Stream
