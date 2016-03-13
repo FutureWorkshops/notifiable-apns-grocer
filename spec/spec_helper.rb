@@ -28,6 +28,8 @@ RSpec.configure do |config|
   config.order = "random"
   
   config.before(:all) {
+    Notifiable.notifier_classes[:apns] = Notifiable::Apns::Grocer::Stream
+    Notifiable::App.define_configuration_accessors(Notifiable.notifier_classes)
     
     # DB setup
     ActiveRecord::Base.establish_connection(
