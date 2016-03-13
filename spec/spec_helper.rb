@@ -21,6 +21,8 @@ DatabaseCleaner.strategy = :truncation
 
 Rails.logger = Logger.new(STDOUT)
 
+require 'byebug'
+
 RSpec.configure do |config|  
   config.mock_with :rspec
   config.order = "random"
