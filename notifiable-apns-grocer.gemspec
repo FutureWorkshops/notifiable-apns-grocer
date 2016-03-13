@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Kamil Kocemba", "Matt Brooke-Smith"]
   spec.email         = ["kamil@futureworkshops.com", "matt@futureworkshops.com"]
   spec.homepage      = "http://www.futureworkshops.com"
-  spec.description   = "Plugin to use Grocer for APNS with Notifiable-Rails"
-  spec.summary       = "Plugin to use Grocer for APNS with Notifiable-Rails"
+  spec.description   = "Notifiable APNS plugin for Grocer"
+  spec.summary       = "Notifiable APNS plugin for Grocer"
   spec.license       = "Apache 2.0"
 
   spec.files         = `git ls-files`.split($/)
@@ -18,8 +18,8 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "notifiable-rails", ">=0.21.0"
-  spec.add_dependency "grocer", '~> 0.5.0'
+  spec.add_dependency "notifiable-rails", ">=0.24.1"
+  spec.add_dependency "grocer", '~> 0.6.1'
   spec.add_dependency "connection_pool", '~> 2.0.0'
  
   spec.add_development_dependency "bundler", "~> 1.3"

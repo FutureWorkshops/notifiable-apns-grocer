@@ -4,16 +4,16 @@ describe Notifiable::Apns::Grocer::Stream do
 
   let(:a) { Notifiable::App.create }  
   let(:n1) { Notifiable::Notification.create(:app => a) }
-  let!(:ln) { Notifiable::LocalizedNotification.create(:message => "Test message", :params => {:flag => true}, :notification => n1, :locale => :en) }
-  let(:d) { Notifiable::DeviceToken.create(:token => "ABC123", :provider => :apns, :app => a, :locale => :en) }
+  let!(:ln) { Notifiable::LocalizedNotification.create(:message => "Test message", :params => {:flag => true}, :notification => n1, :locale => 'en') }
+  let(:d) { Notifiable::DeviceToken.create(:token => "ABC123", :provider => :apns, :app => a, :locale => 'en') }
   
   before(:each) do
-    a.configuration = {:apns => {
-          :gateway_host => "localhost", 
-          :gateway_port => 2195, 
-          :feedback_host => "localhost", 
-          :feedback_port => 2196,
-          :certificate => File.join(File.dirname(__FILE__), "fixtures", "apns-development.pem")}}
+    a.apns_gateway_host = "localhost"
+    a.apns_gateway_port = 2195
+    a.apns_feedback_host = "localhost"
+    a.apns_feedback_port = 2196
+    a.apns_certificate = File.join(File.dirname(__FILE__), "fixtures", "apns-development.pem")
+    a.save_notification_statuses = true
   end
   
   it "sends a single notification" do

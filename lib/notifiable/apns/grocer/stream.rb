@@ -7,7 +7,9 @@ module Notifiable
     module Grocer
   		class Stream < Notifiable::NotifierBase
         
-        attr_accessor :certificate, :passphrase, :connection_pool_size, :connection_pool_timeout, :gateway_host, :gateway_port, :feedback_host, :feedback_port
+        notifier_attribute :certificate, :passphrase, :connection_pool_size, :connection_pool_timeout, :gateway_host, :gateway_port, :feedback_host, :feedback_port
+        
+        attr_reader :certificate, :passphrase
            
         def gateway_host
           @gateway_host || "gateway.push.apple.com"
@@ -31,7 +33,7 @@ module Notifiable
         
         def connection_pool_timeout
           @connection_pool_timeout || 10
-        end   
+        end
                 
         def close
           super
@@ -45,9 +47,10 @@ module Notifiable
             raise "Certificate missing" if certificate.nil?
           
             grocer_notification = ::Grocer::Notification.new(
-              device_token: device_token.token, 
+              device_token: device_token.token,
               alert: localized_notification.message, 
-              custom: localized_notification.send_params
+              custom: localized_notification.send_params,
+              sound: "default"
             )
           
             pusher_pool.with do |pusher|
@@ -77,9 +80,9 @@ module Notifiable
           def feedback_config
             {
               certificate: certificate,
-              passphrase:  self.passphrase,
-              gateway:     self.feedback_host,
-              port:        self.feedback_port,
+              passphrase:  passphrase,
+              gateway:     feedback_host,
+              port:        feedback_port,
               retries:     3
             }
           end
