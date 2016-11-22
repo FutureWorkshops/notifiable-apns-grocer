@@ -7,25 +7,9 @@ module Notifiable
     module Grocer
   		class Stream < Notifiable::NotifierBase
         
-        notifier_attribute :certificate, :passphrase, :connection_pool_size, :connection_pool_timeout, :gateway_host, :gateway_port, :feedback_host, :feedback_port
+        notifier_attribute :certificate, :passphrase, :sandbox, :connection_pool_size, :connection_pool_timeout
         
         attr_reader :certificate, :passphrase
-           
-        def gateway_host
-          @gateway_host || "gateway.push.apple.com"
-        end
-      
-        def gateway_port
-          @gateway_port || 2195
-        end
-      
-        def feedback_host
-          @gateway_host || "feedback.push.apple.com"
-        end
-      
-        def feedback_port
-          @feedback_port || 2196
-        end
         
         def connection_pool_size
           @connection_pool_size || 10
@@ -42,14 +26,14 @@ module Notifiable
         end
       
   			protected      
-    			def enqueue(device_token, localized_notification)        				
+    			def enqueue(device_token, notification)        				
           
             raise "Certificate missing" if certificate.nil?
           
             grocer_notification = ::Grocer::Notification.new(
               device_token: device_token.token,
-              alert: localized_notification.message, 
-              custom: localized_notification.send_params,
+              alert: notification.message, 
+              custom: notification.send_params,
               sound: "default"
             )
           
@@ -65,7 +49,23 @@ module Notifiable
             process_feedback unless self.test_env?
           end
 
-        private                 
+        private 
+          def gateway_host
+            self.sandbox? ? "gateway.sandbox.push.apple.com" : "gateway.push.apple.com"
+          end
+      
+          def gateway_port
+            2195
+          end
+      
+          def feedback_host
+            self.sandbox? ? "feedback.sandbox.push.apple.com" : "feedback.push.apple.com"
+          end
+      
+          def feedback_port
+            2196
+          end
+                        
         # logic     
           def gateway_config 
             {
