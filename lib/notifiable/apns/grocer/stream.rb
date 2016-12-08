@@ -20,7 +20,7 @@ module Notifiable
         end
         
         def sandbox?
-          @sandbox
+          @sandbox == "1"
         end
                 
         def close
@@ -32,7 +32,6 @@ module Notifiable
   			protected      
     			def enqueue(device_token, notification)        				
             raise "Certificate missing" if certificate.nil?
-          
             grocer_notification = ::Grocer::Notification.new(
               device_token: device_token.token,
               alert: notification.message, 
