@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "notifiable-rails", ">=0.24.1"
-  spec.add_dependency "grocer", '~> 0.6.1'
+  spec.add_dependency "grocer", '~> 0.7.0'
   spec.add_dependency "connection_pool", '~> 2.0.0'
  
   spec.add_development_dependency "bundler", "~> 1.3"
