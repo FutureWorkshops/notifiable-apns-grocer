@@ -4,7 +4,6 @@ describe Notifiable::Apns::Grocer::Stream do
 
   let(:a) { Notifiable::App.create }  
   let(:n1) { Notifiable::Notification.create(:app => a) }
-  let!(:ln) { Notifiable::LocalizedNotification.create(:message => "Test message", :params => {:flag => true}, :notification => n1, :locale => 'en') }
   let(:d) { Notifiable::DeviceToken.create(:token => "ABC123", :provider => :apns, :app => a, :locale => 'en') }
   
   before(:each) do
@@ -65,5 +64,9 @@ describe Notifiable::Apns::Grocer::Stream do
     
     expect(g.send(:connection_pool_timeout)).to eq 10 
   end
+  
+  xit "badge count"
+  xit "sound"
+  xit "message"
   
 end
