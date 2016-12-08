@@ -8,10 +8,7 @@ describe Notifiable::Apns::Grocer::Stream do
   let(:d) { Notifiable::DeviceToken.create(:token => "ABC123", :provider => :apns, :app => a, :locale => 'en') }
   
   before(:each) do
-    a.apns_gateway_host = "localhost"
-    a.apns_gateway_port = 2195
-    a.apns_feedback_host = "localhost"
-    a.apns_feedback_port = 2196
+    a.apns_sandbox = true
     a.apns_certificate = File.join(File.dirname(__FILE__), "fixtures", "apns-development.pem")
     a.save_notification_statuses = true
   end
@@ -50,9 +47,9 @@ describe Notifiable::Apns::Grocer::Stream do
     g = Notifiable::Apns::Grocer::Stream.new(Rails.env, n1)
     a.configure(:apns, g)
     
-    expect(g.send(:gateway_host)).to eql "localhost"
+    expect(g.send(:gateway_host)).to eql "gateway.sandbox.push.apple.com"
     expect(g.send(:gateway_port)).to eql 2195
-    expect(g.send(:feedback_host)).to eql "localhost"
+    expect(g.send(:feedback_host)).to eql "feedback.sandbox.push.apple.com"
     expect(g.send(:feedback_port)).to eql 2196
     
   end

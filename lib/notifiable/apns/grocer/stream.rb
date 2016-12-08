@@ -18,6 +18,10 @@ module Notifiable
         def connection_pool_timeout
           @connection_pool_timeout || 10
         end
+        
+        def sandbox?
+          @sandbox
+        end
                 
         def close
           super
@@ -27,7 +31,6 @@ module Notifiable
       
   			protected      
     			def enqueue(device_token, notification)        				
-          
             raise "Certificate missing" if certificate.nil?
           
             grocer_notification = ::Grocer::Notification.new(
@@ -51,7 +54,7 @@ module Notifiable
 
         private 
           def gateway_host
-            self.sandbox ? "gateway.sandbox.push.apple.com" : "gateway.push.apple.com"
+            self.sandbox? ? "gateway.sandbox.push.apple.com" : "gateway.push.apple.com"
           end
       
           def gateway_port
@@ -59,7 +62,7 @@ module Notifiable
           end
       
           def feedback_host
-            self.sandbox ? "feedback.sandbox.push.apple.com" : "feedback.push.apple.com"
+            self.sandbox? ? "feedback.sandbox.push.apple.com" : "feedback.push.apple.com"
           end
       
           def feedback_port
