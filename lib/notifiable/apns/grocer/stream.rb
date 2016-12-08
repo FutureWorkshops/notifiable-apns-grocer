@@ -51,7 +51,7 @@ module Notifiable
 
         private 
           def gateway_host
-            self.sandbox? ? "gateway.sandbox.push.apple.com" : "gateway.push.apple.com"
+            self.sandbox ? "gateway.sandbox.push.apple.com" : "gateway.push.apple.com"
           end
       
           def gateway_port
@@ -59,7 +59,7 @@ module Notifiable
           end
       
           def feedback_host
-            self.sandbox? ? "feedback.sandbox.push.apple.com" : "feedback.push.apple.com"
+            self.sandbox ? "feedback.sandbox.push.apple.com" : "feedback.push.apple.com"
           end
       
           def feedback_port
