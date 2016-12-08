@@ -32,12 +32,12 @@ module Notifiable
   			protected      
     			def enqueue(device_token, notification)        				
             raise "Certificate missing" if certificate.nil?
-            grocer_notification = ::Grocer::Notification.new(
-              device_token: device_token.token,
-              alert: notification.message, 
-              custom: notification.send_params,
-              sound: "default"
-            )
+            
+            payload = {device_token: device_token.token, alert: notification.message, custom: notification.send_params}
+            payload[:sound] = notification.sound if notification.sound
+            payload[:badge] = notification.badge_count if notification.badge_count
+            
+            grocer_notification = ::Grocer::Notification.new(payload)
           
             pusher_pool.with do |pusher|
               pusher.push(grocer_notification)
