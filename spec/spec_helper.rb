@@ -40,7 +40,8 @@ RSpec.configure do |config|
     )
     
     ActiveRecord::Migration.verbose = false
-    ActiveRecord::Migrator.migrate "spec/support/db/migrate"
+    notifiable_rails_path = Gem.loaded_specs['notifiable-rails'].full_gem_path
+    ActiveRecord::Migrator.migrate File.join(notifiable_rails_path, 'db', 'migrate')
     
     @grocer = Grocer.server(port: 2195)
     @grocer.accept
