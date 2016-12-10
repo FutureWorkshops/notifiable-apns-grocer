@@ -20,48 +20,48 @@ describe Notifiable::Apns::Grocer::Stream do
       it { expect(@grocer_payload).to include(alert: "New deals!") } 
       it { expect(@grocer_payload).to include(device_token: "abc123") }
       it { expect(@grocer_payload).to_not include(:sound) }                      
-      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }                     
+      it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }                     
     end
     
     context "sound" do
       let(:n1) { Notifiable::Notification.create! app: a1, sound: "buzzer" }
       it { expect(@grocer_payload).to include(sound: "buzzer") } 
       it { expect(@grocer_payload).to include(device_token: "abc123") } 
-      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }                     
+      it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }                     
     end
     
     context "badge count" do
       let(:n1) { Notifiable::Notification.create! app: a1, badge_count: 1 }
       it { expect(@grocer_payload).to include(badge: 1) } 
       it { expect(@grocer_payload).to include(device_token: "abc123") } 
-      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }                     
+      it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }                     
     end
     
     context "parameters" do
       let(:n1) { Notifiable::Notification.create! app: a1, parameters: {screen: "leaderboard"}}
       it { expect(@grocer_payload).to include(device_token: "abc123") } 
-      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }  
+      it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }  
       it { expect(@grocer_payload[:custom]).to include(screen: "leaderboard") }                     
     end
     
     context "identifier" do
       let(:n1) { Notifiable::Notification.create! app: a1, identifier: "23508241"}
       it { expect(@grocer_payload).to include(device_token: "abc123") } 
-      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }  
+      it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }  
       it { expect(@grocer_payload).to include(identifier: "23508241") }                     
     end
     
     context "content_available" do
       let(:n1) { Notifiable::Notification.create! app: a1, content_available: true}
       it { expect(@grocer_payload).to include(device_token: "abc123") } 
-      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }  
+      it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }  
       it { expect(@grocer_payload).to include(content_available: true) }                     
     end
     
     context "mutable_content" do
       let(:n1) { Notifiable::Notification.create! app: a1, mutable_content: true}
       it { expect(@grocer_payload).to include(device_token: "abc123") } 
-      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }  
+      it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }  
       it { expect(@grocer_payload).to include(mutable_content: true) }                     
     end
     
@@ -69,7 +69,7 @@ describe Notifiable::Apns::Grocer::Stream do
       let(:expiry) { Time.now + 60*60 }
       let(:n1) { Notifiable::Notification.create! app: a1, expiry: expiry}
       it { expect(@grocer_payload).to include(device_token: "abc123") } 
-      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }  
+      it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }  
       it { expect(@grocer_payload).to include(expiry: expiry) }                     
     end
   end
