@@ -30,17 +30,17 @@ module Notifiable
         end
       
   			protected      
-    			def enqueue(device_token, notification)        				
+    			def enqueue(device, notification)        				
             raise "Certificate missing" if certificate.nil?
             
-            grocer_notification = ::Grocer::Notification.new(grocer_payload)
+            grocer_notification = ::Grocer::Notification.new(grocer_payload(device, notification))
           
             pusher_pool.with do |pusher|
               pusher.push(grocer_notification)
             end
                       
             # assume processed. Errors will be receieved through a callback
-            processed(device_token, 0)
+            processed(device, 0)
     			end
       
           def flush
