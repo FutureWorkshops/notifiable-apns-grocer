@@ -33,11 +33,7 @@ module Notifiable
     			def enqueue(device_token, notification)        				
             raise "Certificate missing" if certificate.nil?
             
-            payload = {device_token: device_token.token, alert: notification.message, custom: notification.send_params}
-            payload[:sound] = notification.sound if notification.sound
-            payload[:badge] = notification.badge_count if notification.badge_count
-            
-            grocer_notification = ::Grocer::Notification.new(payload)
+            grocer_notification = ::Grocer::Notification.new(grocer_payload)
           
             pusher_pool.with do |pusher|
               pusher.push(grocer_notification)
@@ -67,8 +63,7 @@ module Notifiable
           def feedback_port
             2196
           end
-                        
-        # logic     
+                          
           def gateway_config 
             {
               certificate: certificate,
@@ -87,6 +82,13 @@ module Notifiable
               port:        feedback_port,
               retries:     3
             }
+          end
+          
+          def grocer_payload(device, notification)
+            payload = {device_token: device.token, alert: notification.message, custom: notification.send_params}
+            payload[:sound] = notification.sound if notification.sound
+            payload[:badge] = notification.badge_count if notification.badge_count
+            payload
           end
           
           def pusher_pool

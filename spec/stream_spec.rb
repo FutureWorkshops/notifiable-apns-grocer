@@ -2,71 +2,59 @@ require 'spec_helper'
 
 describe Notifiable::Apns::Grocer::Stream do
 
-  let(:a) { Notifiable::App.create }  
-  let(:n1) { Notifiable::Notification.create(:app => a) }
-  let(:d) { Notifiable::DeviceToken.create(:token => "ABC123", :provider => :apns, :app => a, :locale => 'en') }
+  subject { Notifiable::Apns::Grocer::Stream.new(Rails.env, n1) }
+  let(:a1) { Notifiable::App.create! name: "Drum Cussac" }
+  let(:n1) { Notifiable::Notification.create! app: a1 }
   
-  before(:each) do
-    a.apns_sandbox = true
-    a.apns_certificate = File.join(File.dirname(__FILE__), "fixtures", "apns-development.pem")
-    a.save_notification_statuses = true
+  describe "#sandbox?" do
+    before(:each) { subject.instance_variable_set("@sandbox", "1") }
+    it { expect(subject.send(:sandbox?)).to eql true }
   end
   
-  it "sends a single notification" do
-    n1.batch do |n| 
-      n.add_device_token(d)
+  describe "#grocer_payload?" do
+    let(:d1) { Notifiable::DeviceToken.create! app: a1, token: "abc123", provider: 'apns' }
+    before(:each) { @grocer_payload = subject.send("grocer_payload", d1, n1) }
+    
+    context "message" do
+      let(:n1) { Notifiable::Notification.create! app: a1, message: "New deals!" }
+      it { expect(@grocer_payload).to include(alert: "New deals!") } 
+      it { expect(@grocer_payload).to include(device_token: "abc123") } 
+      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }                     
     end
     
-    expect(Notifiable::NotificationStatus.count).to eql 1
-    expect(Notifiable::NotificationStatus.first.status).to eql 0
-    
-    Timeout.timeout(2) {
-      notification = @grocer.notifications.pop
-      expect(notification.alert).to eql "Test message"
-      expect(notification.custom[:localized_notification_id]).to eql ln.id
-    }
-  end 
-  
-  it "supports custom properties" do    
-    n1.batch do |n| 
-      n.add_device_token(d)
+    context "sound" do
+      let(:n1) { Notifiable::Notification.create! app: a1, sound: "buzzer" }
+      it { expect(@grocer_payload).to include(sound: "buzzer") } 
+      it { expect(@grocer_payload).to include(device_token: "abc123") } 
+      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }                     
     end
-
-    expect(Notifiable::NotificationStatus.count).to eql 1
-    expect(Notifiable::NotificationStatus.first.status).to eql 0
     
-    Timeout.timeout(2) {
-      notification = @grocer.notifications.pop
-      expect(notification.custom[:localized_notification_id]).to eql ln.id
-      expect(notification.custom[:flag]).to eql true
-    }
+    context "badge count" do
+      let(:n1) { Notifiable::Notification.create! app: a1, badge_count: 1 }
+      it { expect(@grocer_payload).to include(badge: 1) } 
+      it { expect(@grocer_payload).to include(device_token: "abc123") } 
+      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }                     
+    end
+    
+    context "parameters" do
+      let(:n1) { Notifiable::Notification.create! app: a1, parameters: {screen: "leaderboard"}}
+      it { expect(@grocer_payload).to include(device_token: "abc123") } 
+      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }  
+      it { expect(@grocer_payload[:custom]).to include(screen: "leaderboard") }                     
+    end
+    
   end
   
-  it "sets gateway and feedback properties" do
-    g = Notifiable::Apns::Grocer::Stream.new(Rails.env, n1)
-    a.configure(:apns, g)
+  describe "#gateway_host" do
+    context "sandbox" do
+      before(:each) { allow(subject).to receive(:sandbox?) { true } }
+      it { expect(subject.send(:gateway_host)).to eql "gateway.sandbox.push.apple.com" }
+    end
     
-    expect(g.send(:gateway_host)).to eql "gateway.sandbox.push.apple.com"
-    expect(g.send(:gateway_port)).to eql 2195
-    expect(g.send(:feedback_host)).to eql "feedback.sandbox.push.apple.com"
-    expect(g.send(:feedback_port)).to eql 2196
-    
+    context "production" do
+      before(:each) { allow(subject).to receive(:sandbox?) { false } }
+      it { expect(subject.send(:gateway_host)).to eql "gateway.push.apple.com" }
+    end
   end
-
-  it "has default connection pool size" do
-    g = Notifiable::Apns::Grocer::Stream.new(Rails.env, n1)
-    
-    expect(g.send(:connection_pool_size)).to eq 10 
-  end
-  
-  it "has default connection pool timeout" do
-    g = Notifiable::Apns::Grocer::Stream.new(Rails.env, n1)
-    
-    expect(g.send(:connection_pool_timeout)).to eq 10 
-  end
-  
-  xit "badge count"
-  xit "sound"
-  xit "message"
   
 end
