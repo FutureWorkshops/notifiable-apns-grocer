@@ -58,6 +58,12 @@ describe Notifiable::Apns::Grocer::Stream do
       it { expect(@grocer_payload).to include(content_available: true) }                     
     end
     
+    context "mutable_content" do
+      let(:n1) { Notifiable::Notification.create! app: a1, mutable_content: true}
+      it { expect(@grocer_payload).to include(device_token: "abc123") } 
+      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }  
+      it { expect(@grocer_payload).to include(mutable_content: true) }                     
+    end
   end
   
   describe "#gateway_host" do

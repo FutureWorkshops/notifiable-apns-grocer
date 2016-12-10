@@ -90,6 +90,7 @@ module Notifiable
             payload[:badge] = notification.badge_count if notification.badge_count
             payload[:identifier] = notification.identifier if notification.identifier
             payload[:content_available] = notification.content_available if notification.content_available
+            payload[:mutable_content] = notification.mutable_content if notification.mutable_content
             payload
           end
           
