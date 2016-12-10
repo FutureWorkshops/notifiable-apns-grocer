@@ -51,6 +51,13 @@ describe Notifiable::Apns::Grocer::Stream do
       it { expect(@grocer_payload).to include(identifier: "23508241") }                     
     end
     
+    context "content_available" do
+      let(:n1) { Notifiable::Notification.create! app: a1, content_available: true}
+      it { expect(@grocer_payload).to include(device_token: "abc123") } 
+      it { expect(@grocer_payload[:custom]).to include(id: n1.id) }  
+      it { expect(@grocer_payload).to include(content_available: true) }                     
+    end
+    
   end
   
   describe "#gateway_host" do
