@@ -88,6 +88,7 @@ module Notifiable
             payload = {device_token: device.token, alert: notification.message, custom: notification.send_params}
             payload[:sound] = notification.sound if notification.sound
             payload[:badge] = notification.badge_count if notification.badge_count
+            payload[:identifier] = notification.identifier if notification.identifier
             payload
           end
           
