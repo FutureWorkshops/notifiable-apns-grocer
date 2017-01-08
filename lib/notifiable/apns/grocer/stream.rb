@@ -110,8 +110,8 @@ module Notifiable
     					token = attempt.device_token
     					device_token = DeviceToken.find_by_token(token)
     					if device_token
-    						device_token.update_attribute("is_valid", false) if device_token.updated_at < attempt.timestamp
-    						Rails.logger.info("Device #{token} failed at #{attempt.timestamp}")
+    						device_token.destroy if device_token.updated_at < attempt.timestamp
+    						Rails.logger.info("Device #{token} removed at #{attempt.timestamp}")
     					end
     				end
           end
