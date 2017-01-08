@@ -87,7 +87,14 @@ describe Notifiable::Apns::Grocer::Stream do
   end
   
   describe "#feedback" do
-    xit "Remove tokens"
+    let!(:d1) { Notifiable::DeviceToken.create! app: a1, token: 'abc123', provider: 'apns' }
+    before(:each) do
+      feedback_double = double('Grocer::Feedback')
+      attempt_double = double('Grocer::FailedDeliveryAttempt', device_token: 'abc123', timestamp: DateTime.now)
+      allow(subject).to receive(:grocer_feedback) { [attempt_double].each } 
+      subject.send(:process_feedback)
+    end
+    it { expect(Notifiable::DeviceToken.count).to eq 0 }
   end
   
 end
