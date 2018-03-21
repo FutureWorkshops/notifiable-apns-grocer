@@ -23,6 +23,15 @@ describe Notifiable::Apns::Grocer::Stream do
       it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }                     
     end
     
+    context "title and message" do
+      let(:n1) { Notifiable::Notification.create! app: a1, title: 'Shopping', message: "New deals!" }
+      it { expect(@grocer_payload[:alert]).to include({title: 'Shopping'}) } 
+      it { expect(@grocer_payload[:alert]).to include({body: 'New deals!'}) } 
+      it { expect(@grocer_payload).to include(device_token: "abc123") }
+      it { expect(@grocer_payload).to_not include(:sound) }                      
+      it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }                     
+    end
+    
     context "sound" do
       let(:n1) { Notifiable::Notification.create! app: a1, sound: "buzzer" }
       it { expect(@grocer_payload).to include(sound: "buzzer") } 

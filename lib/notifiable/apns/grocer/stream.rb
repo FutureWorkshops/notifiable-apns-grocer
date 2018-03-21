@@ -85,7 +85,8 @@ module Notifiable
           end
           
           def grocer_payload(device, notification)
-            payload = {device_token: device.token, alert: notification.message, custom: notification.send_params}
+            payload = {device_token: device.token, custom: notification.send_params}
+            payload[:alert] = notification.title ? {title: notification.title, body: notification.message} : notification.message
             payload[:sound] = notification.sound if notification.sound
             payload[:badge] = notification.badge_count if notification.badge_count
             payload[:identifier] = notification.identifier if notification.identifier
