@@ -89,6 +89,14 @@ describe Notifiable::Apns::Grocer::Stream do
       it { expect(@grocer_payload).to include(thread_id: "threadabc123") }
       it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }
     end
+    
+    context "category" do
+      let(:category) { "INVITATION" }
+      let(:n1) { Notifiable::Notification.create! app: a1, category: category}
+      it { expect(@grocer_payload).to include(device_token: "abc123") }
+      it { expect(@grocer_payload).to include(category: "INVITATION") }
+      it { expect(@grocer_payload[:custom]).to include(n_id: n1.id) }
+    end
   end
   
   describe "#gateway_host" do

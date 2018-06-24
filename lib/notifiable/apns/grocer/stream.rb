@@ -95,6 +95,7 @@ module Notifiable
             payload[:content_available] = notification.content_available if notification.content_available
             payload[:mutable_content] = notification.mutable_content if notification.mutable_content
             payload[:expiry] = notification.expiry if notification.expiry
+            payload[:category] = notification.category if notification.category
             payload
           end
           
