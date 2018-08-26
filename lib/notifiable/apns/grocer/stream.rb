@@ -40,7 +40,7 @@ module Notifiable
             end
                       
             # assume processed. Errors will be receieved through a callback
-            processed(device, 0)
+            processed(device)
     			end
       
           def flush

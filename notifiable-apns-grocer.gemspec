@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "notifiable-core", ">= 0.1.2"
+  spec.add_dependency "notifiable-core", ">= 0.1.3"
   spec.add_dependency "grocer", '~> 0.7.2'
   spec.add_dependency "connection_pool", '~> 2.0.0'
  
