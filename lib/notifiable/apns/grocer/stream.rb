@@ -44,7 +44,7 @@ module Notifiable
     			end
       
           def flush
-            process_feedback unless self.test_env?
+            process_feedback
           end
 
         private 
