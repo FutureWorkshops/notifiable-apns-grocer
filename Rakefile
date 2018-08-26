@@ -1,6 +1,8 @@
 require "bundler/gem_tasks"
 require 'rspec/core/rake_task'
-Dir[File.join(File.dirname(__FILE__), 'lib/tasks/**/*.rake')].each {|f| load f }
+
+notifiable_path = Gem::Specification.find_by_name 'notifiable-core'
+load "#{notifiable_path.gem_dir}/lib/tasks/db.rake"
 
 namespace :ci do
   namespace :test do

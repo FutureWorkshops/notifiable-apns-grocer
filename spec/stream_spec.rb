@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Notifiable::Apns::Grocer::Stream do
 
-  subject { Notifiable::Apns::Grocer::Stream.new(Rails.env, n1) }
+  subject { Notifiable::Apns::Grocer::Stream.new(n1) }
   let(:a1) { Notifiable::App.create! name: "Drum Cussac" }
   let(:n1) { Notifiable::Notification.create! app: a1 }
   
